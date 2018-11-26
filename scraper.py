@@ -18,7 +18,10 @@ pageNum = 0
 #only to 5 now for testing
 while pageNum < 5:
     headers = {'X-TBA-Auth-Key': authKey}
-    teams.extend(requests.get(baseUrl + "/teams/" + year + "/" + str(pageNum), headers=headers).json())
+    pulledData = requests.get(baseUrl + "/teams/" + year + "/" + str(pageNum), headers=headers).json();
+    if len(pulledData) == 0:
+        break
+    teams.extend(pulledData)
     pageNum += 1
 
 print(teams)
