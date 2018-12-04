@@ -15,7 +15,7 @@ teams = []
 #get all teams
 #continue until it reaches the end of the robots that exist
 pageNum = 0
-while True:
+while pageNum < 1:
     headers = {'X-TBA-Auth-Key': authKey}
     pulledData = requests.get(baseUrl + "/teams/" + year + "/" + str(pageNum), headers=headers).json();
     if len(pulledData) == 0:
@@ -36,20 +36,25 @@ teamAwards = []
 #Find wins from teams
 for team in teams:
     headers = {'X-TBA-Auth-Key': authKey}
-    awards = requests.get(baseUrl + "/team/" + team['key'] + "/awards/", headers=headers).json()
+    awards = requests.get(baseUrl + "/team/" + team['key'] + "/awards", headers=headers).json()
     wins = 0
     finalists = 0
     chairmans = 0
-    totalAwards = len(awards)
+    totalAwards = 0
     for award in awards:
-        if award['award_type'] == 1:
-            wins += 1
-        if award['award_type'] == 2:
-            finalists += 1
-        if award['award_type'] == 0:
-            chairmans += 1
+        #only count 2018 data
+        if award['year'] == 2018:
+            if award['award_type'] == 1:
+                wins += 1
+            if award['award_type'] == 2:
+                finalists += 1
+            if award['award_type'] == 0:
+                chairmans += 1
+            totalAwards += 1
     teamWins.append(wins)
     teamFinalists.append(finalists)
     teamChairmans.append(chairmans)
     teamAwards.append(totalAwards)
+    print(str(wins) + " " + str(finalists) + " " + str(totalAwards) + " " + str(chairmans))
+
 print(teams)
