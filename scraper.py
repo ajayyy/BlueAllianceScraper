@@ -9,6 +9,8 @@ config = json.loads(open("config.properties", "r").read())
 
 authKey = config['authKey']
 
+headers = {'X-TBA-Auth-Key': authKey}
+
 #all teams data
 teams = []
 
@@ -16,7 +18,6 @@ teams = []
 #continue until it reaches the end of the robots that exist
 pageNum = 0
 while pageNum < 1:
-    headers = {'X-TBA-Auth-Key': authKey}
     pulledData = requests.get(baseUrl + "/teams/" + year + "/" + str(pageNum), headers=headers).json();
     if len(pulledData) == 0:
         break
@@ -35,7 +36,6 @@ teamAwards = []
 
 #Find wins from teams
 for team in teams:
-    headers = {'X-TBA-Auth-Key': authKey}
     awards = requests.get(baseUrl + "/team/" + team['key'] + "/awards", headers=headers).json()
     wins = 0
     finalists = 0
@@ -56,18 +56,37 @@ for team in teams:
     teamChairmans.append(chairmans)
     teamAwards.append(totalAwards)
 
+
+def getEventData(teamKey, eventKey):
+    eventData = requests.get(baseUrl + "/team/" + teamKey + "/event/" + eventKey + "/status", headers=headers).json()
+    return eventData
+
+teamWorldsRank = []
+teamEventData = []
 #true or false
 teamWorlds = []
+teamEinstiens = []
 
 for team in teams:
-    headers = {'X-TBA-Auth-Key': authKey}
     events = requests.get(baseUrl + "/team/" + team['key'] + "/events/2018/keys", headers=headers).json()
     worlds = False
+    einstien = False;
+    worldsRank = -1
+    allEventData = []
     for event in events:
-        if (event.startswith("2018cmp")):
+        eventData = getEventData(team['key'], event)
+        allEventData.append(eventData)
+        #normal worlds
+        if (event.startswith("2018dal") or event.startswith("2018arc") or event.startswith("2018cars") or event.startswith("2018cur") or event.startswith("2018dar") or event.startswith("2018tes") or event.startswith("2018tur") or event.startswith("2018new") or event.startswith("2018roe") or event.startswith("2018hop") or event.startswith("2018gal") or event.startswith("2018carv")):
             worlds = True
-            break
+            worldsRank = eventData['qual']['ranking']['rank']
+        #einstein TODO
+        if (event.startswith("2018cmp")):
+            einstien = True
+                
     teamWorlds.append(worlds)
+    teamWorldsRank.append(worldsRank)
+    teamEventData.append(allEventData)
 
 # f = open("data.csv","w+")
 
