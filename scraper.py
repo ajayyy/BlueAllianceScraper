@@ -55,6 +55,21 @@ for team in teams:
     teamFinalists.append(finalists)
     teamChairmans.append(chairmans)
     teamAwards.append(totalAwards)
-    print(str(wins) + " " + str(finalists) + " " + str(totalAwards) + " " + str(chairmans))
 
-print(teams)
+#true or false
+teamWorlds = []
+
+for team in teams:
+    headers = {'X-TBA-Auth-Key': authKey}
+    events = requests.get(baseUrl + "/team/" + team['key'] + "/events/2018/keys", headers=headers).json()
+    worlds = False
+    for event in events:
+        if (event.startswith("2018cmp")):
+            worlds = True
+            break
+    teamWorlds.append(worlds)
+
+# f = open("data.csv","w+")
+
+# for i in range(len(teams)):
+#     f.write()
