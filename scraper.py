@@ -63,16 +63,18 @@ def getEventData(teamKey, eventKey):
 
 teamWorldsRank = []
 teamEventData = []
+teamHighestRank = []
 #true or false
 teamWorlds = []
 teamEinstiens = []
 
 for team in teams:
-    events = requests.get(baseUrl + "/team/" + team['key'] + "/events/2018/keys", headers=headers).json()
+    events = requests.get(baseUrl + "/team/" + team['key'] + "/events/" + year + "/keys", headers=headers).json()
     worlds = False
-    einstien = False;
+    einstien = False
     worldsRank = -1
     allEventData = []
+    highestRank = -1
     for event in events:
         eventData = getEventData(team['key'], event)
         allEventData.append(eventData)
@@ -80,13 +82,15 @@ for team in teams:
         if (event.startswith("2018dal") or event.startswith("2018arc") or event.startswith("2018cars") or event.startswith("2018cur") or event.startswith("2018dar") or event.startswith("2018tes") or event.startswith("2018tur") or event.startswith("2018new") or event.startswith("2018roe") or event.startswith("2018hop") or event.startswith("2018gal") or event.startswith("2018carv")):
             worlds = True
             worldsRank = eventData['qual']['ranking']['rank']
-        #einstein TODO
-        if (event.startswith("2018cmp")):
+        #einstein
+        elif (event.startswith("2018cmp")):
             einstien = True
-                
+        else (eventData['qual']['ranking']['rank'] < highestRank or highestRank == -1):
+            highestRank = eventData['qual']['ranking']['rank']
     teamWorlds.append(worlds)
     teamWorldsRank.append(worldsRank)
     teamEventData.append(allEventData)
+    teamHighestRank.append(highestRank)
 
 # f = open("data.csv","w+")
 
