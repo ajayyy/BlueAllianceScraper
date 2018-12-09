@@ -34,27 +34,27 @@ teamChairmans = []
 #total awards
 teamAwards = []
 
-#Find wins from teams
-for team in teams:
-    awards = requests.get(baseUrl + "/team/" + team['key'] + "/awards", headers=headers).json()
-    wins = 0
-    finalists = 0
-    chairmans = 0
-    totalAwards = 0
-    for award in awards:
-        #only count 2018 data
-        if award['year'] == 2018:
-            if award['award_type'] == 1:
-                wins += 1
-            if award['award_type'] == 2:
-                finalists += 1
-            if award['award_type'] == 0:
-                chairmans += 1
-            totalAwards += 1
-    teamWins.append(wins)
-    teamFinalists.append(finalists)
-    teamChairmans.append(chairmans)
-    teamAwards.append(totalAwards)
+# #Find wins from teams
+# for team in teams:
+#     awards = requests.get(baseUrl + "/team/" + team['key'] + "/awards", headers=headers).json()
+#     wins = 0
+#     finalists = 0
+#     chairmans = 0
+#     totalAwards = 0
+#     for award in awards:
+#         #only count 2018 data
+#         if award['year'] == 2018:
+#             if award['award_type'] == 1:
+#                 wins += 1
+#             if award['award_type'] == 2:
+#                 finalists += 1
+#             if award['award_type'] == 0:
+#                 chairmans += 1
+#             totalAwards += 1
+#     teamWins.append(wins)
+#     teamFinalists.append(finalists)
+#     teamChairmans.append(chairmans)
+#     teamAwards.append(totalAwards)
 
 
 def getEventData(teamKey, eventKey):
@@ -85,7 +85,7 @@ for team in teams:
         #einstein
         elif (event.startswith("2018cmp")):
             einstien = True
-        else (eventData['qual']['ranking']['rank'] < highestRank or highestRank == -1):
+        if (eventData['qual'] != None and eventData['qual']['ranking'] != None and eventData['qual']['ranking']['rank'] != None and (eventData['qual']['ranking']['rank'] < highestRank or highestRank == -1)):
             highestRank = eventData['qual']['ranking']['rank']
     teamWorlds.append(worlds)
     teamWorldsRank.append(worldsRank)
