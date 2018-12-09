@@ -17,13 +17,12 @@ teams = []
 #get all teams
 #continue until it reaches the end of the robots that exist
 pageNum = 0
-while pageNum < 1:
+while True:
     pulledData = requests.get(baseUrl + "/teams/" + year + "/" + str(pageNum), headers=headers).json();
     if len(pulledData) == 0:
         break
     teams.extend(pulledData)
     pageNum += 1
-
 
 #get amount of championship wins this team has gotten
 #this data is recieved from grabbing the awards from tha apo
@@ -34,27 +33,27 @@ teamChairmans = []
 #total awards
 teamAwards = []
 
-# #Find wins from teams
-# for team in teams:
-#     awards = requests.get(baseUrl + "/team/" + team['key'] + "/awards", headers=headers).json()
-#     wins = 0
-#     finalists = 0
-#     chairmans = 0
-#     totalAwards = 0
-#     for award in awards:
-#         #only count 2018 data
-#         if award['year'] == 2018:
-#             if award['award_type'] == 1:
-#                 wins += 1
-#             if award['award_type'] == 2:
-#                 finalists += 1
-#             if award['award_type'] == 0:
-#                 chairmans += 1
-#             totalAwards += 1
-#     teamWins.append(wins)
-#     teamFinalists.append(finalists)
-#     teamChairmans.append(chairmans)
-#     teamAwards.append(totalAwards)
+#Find wins from teams
+for team in teams:
+    awards = requests.get(baseUrl + "/team/" + team['key'] + "/awards", headers=headers).json()
+    wins = 0
+    finalists = 0
+    chairmans = 0
+    totalAwards = 0
+    for award in awards:
+        #only count 2018 data
+        if award['year'] == 2018:
+            if award['award_type'] == 1:
+                wins += 1
+            if award['award_type'] == 2:
+                finalists += 1
+            if award['award_type'] == 0:
+                chairmans += 1
+            totalAwards += 1
+    teamWins.append(wins)
+    teamFinalists.append(finalists)
+    teamChairmans.append(chairmans)
+    teamAwards.append(totalAwards)
 
 
 def getEventData(teamKey, eventKey):
@@ -91,8 +90,48 @@ for team in teams:
     teamWorldsRank.append(worldsRank)
     teamEventData.append(allEventData)
     teamHighestRank.append(highestRank)
+    teamEinstiens.append(einstien)
 
-# f = open("data.csv","w+")
+f = open("data.csv","w+")
 
-# for i in range(len(teams)):
-#     f.write()
+#write labels
+labels = ""
+
+labels += "Team Number,"
+labels += "Team Name,"
+labels += "Year Established,"
+
+#awards
+labels += "Competition Wins,"
+labels += "Number Of Times A Finalist,"
+labels += "Number Of Chairman's Awards,"
+labels += "Number Of Awards,"
+
+#event
+labels += "Rank Position At Worlds,"
+labels += "Highest Rank Position,"
+labels += "Made It To Worlds,"
+labels += "Made it to Einstien Field,"
+
+f.write(labels + "\n")
+
+for i in range(len(teams)):
+    #full text line that will be saved
+    line = ""
+    line += teams[i]['key'] + ","
+    line += teams[i]['nickname'] + ","
+    line += str(teams[i]['rookie_year']) + ","
+
+    #awards data
+    line += str(teamWins[i]) + ","
+    line += str(teamFinalists[i]) + ","
+    line += str(teamChairmans[i]) + ","
+    line += str(teamAwards[i]) + ","
+
+    #event data
+    line += str(teamWorldsRank[i]) + ","
+    line += str(teamHighestRank[i]) + ","
+    line += str(teamWorlds[i]) + ","
+    line += str(teamEinstiens[i]) + ","
+
+    f.write(line + "\n")
