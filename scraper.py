@@ -83,7 +83,7 @@ for team in teams:
                 or event.startswith("2018gal") or event.startswith("2018carv")):
             worlds = True
             if (eventData == None):
-                #this should not happen
+                #this event has no data (probably didn't participate in all the of the matches for worlds)
                 print(team['key'], event)
             if (eventData != None and eventData['qual'] != None and eventData['qual']['ranking'] != None and eventData['qual']['ranking']['rank'] != None):
                 worldsRank = eventData['qual']['ranking']['rank']
@@ -92,7 +92,7 @@ for team in teams:
             einstien = True
 
         if (eventData == None):
-            #this should not happen
+                #this event has no data (probably an off season event)
             print(team['key'], event)
 
         if (eventData != None and eventData['qual'] != None and eventData['qual']['ranking'] != None and eventData['qual']['ranking']['rank'] != None 
