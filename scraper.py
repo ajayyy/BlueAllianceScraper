@@ -78,21 +78,34 @@ for team in teams:
         eventData = getEventData(team['key'], event)
         allEventData.append(eventData)
         #normal worlds
-        if (event.startswith("2018dal") or event.startswith("2018arc") or event.startswith("2018cars") or event.startswith("2018cur") or event.startswith("2018dar") or event.startswith("2018tes") or event.startswith("2018tur") or event.startswith("2018new") or event.startswith("2018roe") or event.startswith("2018hop") or event.startswith("2018gal") or event.startswith("2018carv")):
+        if (event.startswith("2018dal") or event.startswith("2018arc") or event.startswith("2018cars") or event.startswith("2018cur") or event.startswith("2018dar") or 
+                event.startswith("2018tes") or event.startswith("2018tur") or event.startswith("2018new") or event.startswith("2018roe") or event.startswith("2018hop") 
+                or event.startswith("2018gal") or event.startswith("2018carv")):
             worlds = True
-            worldsRank = eventData['qual']['ranking']['rank']
+            if (eventData == None):
+                #this should not happen
+                print(team['key'], event)
+            if (eventData != None and eventData['qual'] != None and eventData['qual']['ranking'] != None and eventData['qual']['ranking']['rank'] != None):
+                worldsRank = eventData['qual']['ranking']['rank']
         #einstein
         elif (event.startswith("2018cmp")):
             einstien = True
-        if (eventData['qual'] != None and eventData['qual']['ranking'] != None and eventData['qual']['ranking']['rank'] != None and (eventData['qual']['ranking']['rank'] < highestRank or highestRank == -1)):
+
+        if (eventData == None):
+            #this should not happen
+            print(team['key'], event)
+
+        if (eventData != None and eventData['qual'] != None and eventData['qual']['ranking'] != None and eventData['qual']['ranking']['rank'] != None 
+                and (eventData['qual']['ranking']['rank'] < highestRank or highestRank == -1)):
             highestRank = eventData['qual']['ranking']['rank']
+
     teamWorlds.append(worlds)
     teamWorldsRank.append(worldsRank)
     teamEventData.append(allEventData)
     teamHighestRank.append(highestRank)
     teamEinstiens.append(einstien)
 
-f = open("data.csv","w+")
+f = open("data.csv", "w+", encoding="utf-8")
 
 #write labels
 labels = ""
