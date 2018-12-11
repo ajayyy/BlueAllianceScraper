@@ -92,7 +92,7 @@ for team in teams:
             einstien = True
 
         if (eventData == None):
-                #this event has no data (probably an off season event)
+            #this event has no data (probably an off season event)
             print(team['key'], event)
 
         if (eventData != None and eventData['qual'] != None and eventData['qual']['ranking'] != None and eventData['qual']['ranking']['rank'] != None 
